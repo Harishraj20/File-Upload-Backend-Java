@@ -1,0 +1,4 @@
+com\upload\Service\ProductService.class
+com\upload\Controller\ProductController.class
+com\upload\Models\Product.class
+com\upload\Repository\ProductRepository.class
