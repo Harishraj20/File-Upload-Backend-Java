@@ -22,5 +22,13 @@ public class ProductService {
        return productRepository.fetchProductFromDB();
     }
 
+    public void updateProductCount(int productId) {
+      //  productRepository.updateCount(productId);
+    }
+
+    public void incrementProdutQuantity(int productId) {
+        productRepository.incrementCount(productId);
+     }
+
 
 }

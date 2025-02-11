@@ -6,12 +6,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "product_table")
 public class Product {
-    @JsonIgnore
+  
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -19,7 +17,8 @@ public class Product {
     private int quantity;
     private String imagePath;
 
-    public Product(String imagePath, String productName, int quantity) {
+    public Product(int id, String imagePath, String productName, int quantity) {
+        this.id = id;
         this.imagePath = imagePath;
         this.productName = productName;
         this.quantity = quantity;
@@ -58,5 +57,11 @@ public class Product {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    @Override
+    public String toString() {
+        return "Product [id=" + id + ", productName=" + productName + ", quantity=" + quantity + ", imagePath="
+                + imagePath + "]";
     }
 }

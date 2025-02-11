@@ -4,13 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,7 +44,7 @@ public class ProductController {
 
     @PostMapping("/upload")
     @ResponseBody
-    public Product handleFileUpload(
+    public ResponseEntity<?> handleFileUpload(
             @RequestParam("productName") String productName,
             @RequestParam("quantity") int quantity,
             @RequestPart("image") MultipartFile file,
@@ -59,7 +63,9 @@ public class ProductController {
 
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         String filePath = uploadDir + fileName;
-        System.out.println("File Seperator: " + File.separator); // Removed this in string concatenation in filePath Hence Correct Path "C:/uploads/1738930259562_iphone.jpg"
+        System.out.println("File Seperator: " + File.separator); // Removed this in string concatenation in filePath
+        // Hence Correct Path
+        // "C:/uploads/1738930259562_iphone.jpg"
         System.out.println("File Name: " + file.getOriginalFilename());
         System.out.println("File Seperator: " + fileName);
         System.out.println("File Path: " + filePath);
@@ -70,31 +76,32 @@ public class ProductController {
         product.setProductName(productName);
         product.setQuantity(quantity);
         product.setImagePath(filePath);
-        return product;
 
-        // try {
-        // service.addProducts(product);
-        // return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message",
-        // "Product added Successfully"));
+        try {
+            service.addProducts(product);
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message",
+                    "Product added Successfully"));
 
-        // } catch (HibernateException e) {
-        // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        // .body(Map.of("message", "Internal Server Error"));
+        } catch (HibernateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Internal Server Error"));
 
-        // } catch (Exception e) {
-        // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        // .body(Map.of("message", "Something went wrong..Try Again Later!"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "Something went wrong..Try Again Later!"));
 
-        // }
+        }
     }
 
     @GetMapping("/fetchProducts")
     @ResponseBody
     public List<Product> fetchProds() {
+
         return service.getProducts();
     }
 
     @GetMapping("/{filename}")
+    @SuppressWarnings("UseSpecificCatch")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
             Path imagePath = Paths.get("C:/uploads/" + filename);
@@ -110,6 +117,16 @@ public class ProductController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @PostMapping("/updateProduct/{productId}")
+    public void updateProduct(@PathVariable int productId) {
+        service.updateProductCount(productId);
+    }
+
+    @PostMapping("/updateProduct/icrement/{productId}")
+    public void incrementProduct(@PathVariable int productId) {
+        service.incrementProdutQuantity(productId);
     }
 
 }
