@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,15 +46,22 @@ public class ProductController {
     public ResponseEntity<?> handleFileUpload(
             @RequestParam("productName") String productName,
             @RequestParam("quantity") int quantity,
-            @RequestPart("image") MultipartFile file,
+            @RequestParam("capacity") String capacity,
+            @RequestParam("starRating") int starRating,
+            @RequestParam("technology") String technology,
+            @RequestParam("seller") String seller,
+            @RequestParam("discount") int discount,
+            @RequestParam("offer") String offer,
+            @RequestParam("mrp") int mrp,
+            @RequestParam("productDescription") String productDescription,
+            @RequestParam("image") MultipartFile file,
             HttpServletRequest request) throws IllegalStateException, IOException {
 
         if (file.isEmpty()) {
-            throw new RuntimeException("File is empty");
+            return ResponseEntity.badRequest().body(Map.of("message", "File is empty"));
         }
 
         String uploadDir = "C:/uploads/";
-        System.out.println("Upload DIR : " + uploadDir);
         File dir = new File(uploadDir);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -63,33 +69,39 @@ public class ProductController {
 
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         String filePath = uploadDir + fileName;
-        System.out.println("File Seperator: " + File.separator); // Removed this in string concatenation in filePath
-        // Hence Correct Path
-        // "C:/uploads/1738930259562_iphone.jpg"
-        System.out.println("File Name: " + file.getOriginalFilename());
-        System.out.println("File Seperator: " + fileName);
-        System.out.println("File Path: " + filePath);
         File serverFile = new File(filePath);
         file.transferTo(serverFile);
 
         Product product = new Product();
         product.setProductName(productName);
         product.setQuantity(quantity);
+        product.setCapacity(capacity);
+        product.setStarRating(starRating);
+        product.setTechnology(technology);
+
+        if (product.getQuantity() > 0) {
+            product.setStockStatus("true");
+        } else {
+            product.setStockStatus("false");
+        }
+        product.setSeller(seller);
+        product.setDiscount(discount);
+        product.setOffer(offer);
+        product.setMrp(mrp);
+        product.setProductDescription(productDescription);
         product.setImagePath(filePath);
+        System.out.println(product);
 
         try {
             service.addProducts(product);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message",
-                    "Product added Successfully"));
-
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("message", "Product added successfully"));
         } catch (HibernateException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "Internal Server Error"));
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("message", "Something went wrong..Try Again Later!"));
-
         }
     }
 
