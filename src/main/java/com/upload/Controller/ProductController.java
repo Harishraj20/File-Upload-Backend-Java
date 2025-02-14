@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -139,6 +140,17 @@ public class ProductController {
     @PostMapping("/updateProduct/icrement/{productId}")
     public void incrementProduct(@PathVariable int productId) {
         service.incrementProdutQuantity(productId);
+    }
+
+    @GetMapping("/recommendedproducts")
+    public List<Product> recommendProducts() {
+        List<Product> productList = service.getProducts();
+
+        List<Product> recommendedProducts = productList.stream().filter(prod -> prod.getRecommendation().equals("yes"))
+                .collect(Collectors.toList());
+                System.out.println(recommendedProducts);
+
+        return recommendedProducts;
     }
 
 }

@@ -26,26 +26,36 @@ public class Product {
     private String offer;
     private int mrp;
     private String imagePath;
+    private String recommendation;
 
-    public Product() {
+    public Product(String capacity, int discount, int id, String imagePath, int mrp, String offer,
+            String productDescription, String productName, int quantity, String recommendation, String seller,
+            int starRating, String stockStatus, String technology) {
+        this.capacity = capacity;
+        this.discount = discount;
+        this.id = id;
+        this.imagePath = imagePath;
+        this.mrp = mrp;
+        this.offer = offer;
+        this.productDescription = productDescription;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.recommendation = recommendation;
+        this.seller = seller;
+        this.starRating = starRating;
+        this.stockStatus = stockStatus;
+        this.technology = technology;
     }
 
-    public Product(int id, String productName, String productDescription, int quantity, String capacity, int starRating,
-            String technology, String stockStatus, String seller, int discount, String offer, int mrp,
-            String imagePath) {
-        this.id = id;
-        this.productName = productName;
-        this.productDescription = productDescription;
-        this.quantity = quantity;
-        this.capacity = capacity;
-        this.starRating = starRating;
-        this.technology = technology;
-        this.stockStatus = stockStatus;
-        this.seller = seller;
-        this.discount = discount;
-        this.offer = offer;
-        this.mrp = mrp;
-        this.imagePath = imagePath;
+    public String getRecommendation() {
+        return recommendation;
+    }
+
+    public void setRecommendation(String recommendation) {
+        this.recommendation = recommendation;
+    }
+
+    public Product() {
     }
 
     public String getProductDescription() {
