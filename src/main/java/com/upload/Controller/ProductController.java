@@ -153,4 +153,9 @@ public class ProductController {
         return recommendedProducts;
     }
 
+    @GetMapping("/search")
+    public List<Map<String, Object>> getSearchRecommendations(@RequestParam String val){
+        return service.getSearchProducts(val);
+    }
+
 }
