@@ -18,6 +18,15 @@ public class Product {
 
     private int quantity;
     private String capacity;
+
+    public int getDeliveryday() {
+        return deliveryday;
+    }
+
+    public void setDeliveryday(int deliveryday) {
+        this.deliveryday = deliveryday;
+    }
+
     private int starRating;
     private String technology;
     private String stockStatus;
@@ -27,24 +36,25 @@ public class Product {
     private int mrp;
     private String imagePath;
     private String recommendation;
+    private int deliveryday;
 
-    public Product(String capacity, int discount, int id, String imagePath, int mrp, String offer,
-            String productDescription, String productName, int quantity, String recommendation, String seller,
-            int starRating, String stockStatus, String technology) {
-        this.capacity = capacity;
-        this.discount = discount;
-        this.id = id;
-        this.imagePath = imagePath;
-        this.mrp = mrp;
-        this.offer = offer;
-        this.productDescription = productDescription;
+    public Product(String productName, String productDescription, int quantity, String capacity, int starRating,
+            String technology, String stockStatus, String seller, int discount, String offer, int mrp, String imagePath,
+            String recommendation, int deliveryday) {
         this.productName = productName;
+        this.productDescription = productDescription;
         this.quantity = quantity;
-        this.recommendation = recommendation;
-        this.seller = seller;
+        this.capacity = capacity;
         this.starRating = starRating;
-        this.stockStatus = stockStatus;
         this.technology = technology;
+        this.stockStatus = stockStatus;
+        this.seller = seller;
+        this.discount = discount;
+        this.offer = offer;
+        this.mrp = mrp;
+        this.imagePath = imagePath;
+        this.recommendation = recommendation;
+        this.deliveryday = deliveryday;
     }
 
     public String getRecommendation() {
@@ -179,6 +189,8 @@ public class Product {
         sb.append(", offer=").append(offer);
         sb.append(", mrp=").append(mrp);
         sb.append(", imagePath=").append(imagePath);
+        sb.append(", recommendation=").append(recommendation);
+        sb.append(", deliveryday=").append(deliveryday);
         sb.append('}');
         return sb.toString();
     }
