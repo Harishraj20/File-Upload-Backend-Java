@@ -167,4 +167,21 @@ public class ProductRepository {
         }
     }
 
+    public Product fetchProductById(int id) {
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            Product product = session.get(Product.class, id);
+            return product;
+
+        } catch (HibernateException e) {
+            System.out.println("Hibernate Exception is: " + e);
+            return null;
+
+        } catch (Exception e) {
+            System.out.println("General Exception is: " + e);
+            return null;
+
+        }
+    }
+
 }

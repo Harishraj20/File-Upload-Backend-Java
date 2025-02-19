@@ -148,14 +148,25 @@ public class ProductController {
 
         List<Product> recommendedProducts = productList.stream().filter(prod -> prod.getRecommendation().equals("yes"))
                 .collect(Collectors.toList());
-                System.out.println(recommendedProducts);
+        System.out.println(recommendedProducts);
 
         return recommendedProducts;
     }
 
     @GetMapping("/search")
-    public List<Map<String, Object>> getSearchRecommendations(@RequestParam String val){
+    public List<Map<String, Object>> getSearchRecommendations(@RequestParam String val) {
         return service.getSearchProducts(val);
+    }
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<?> getSingleProduct(@PathVariable int id) {
+        Product product = service.getProductById(id);
+
+        if (product != null) {
+            return ResponseEntity.ok(product);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found!");
     }
 
 }

@@ -35,4 +35,9 @@ public class ProductService {
         return productRepository.listSearchResults(val);
     }
 
+    public Product getProductById(int id) {
+        return productRepository.fetchProductById(id);
+        
+    }
+
 }
