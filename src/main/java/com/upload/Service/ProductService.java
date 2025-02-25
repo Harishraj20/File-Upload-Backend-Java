@@ -1,7 +1,6 @@
 package com.upload.Service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,13 +30,12 @@ public class ProductService {
         productRepository.incrementCount(productId);
     }
 
-    public List<Map<String, Object>> getSearchProducts(String val) {
+    public List<Product> getSearchProducts(String val) {
         return productRepository.listSearchResults(val);
     }
 
     public Product getProductById(int id) {
         return productRepository.fetchProductById(id);
-        
     }
 
 }

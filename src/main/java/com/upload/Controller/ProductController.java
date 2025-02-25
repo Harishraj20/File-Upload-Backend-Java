@@ -55,7 +55,10 @@ public class ProductController {
             @RequestParam("offer") String offer,
             @RequestParam("mrp") int mrp,
             @RequestParam("productDescription") String productDescription,
+            @RequestParam("recommendation") String recommendation,
+            @RequestParam("deliveryday") int deliveryday,
             @RequestParam("image") MultipartFile file,
+            @RequestParam("brand") String brand,
             HttpServletRequest request) throws IllegalStateException, IOException {
 
         if (file.isEmpty()) {
@@ -73,26 +76,14 @@ public class ProductController {
         File serverFile = new File(filePath);
         file.transferTo(serverFile);
 
-        Product product = new Product();
-        product.setProductName(productName);
-        product.setQuantity(quantity);
-        product.setCapacity(capacity);
-        product.setStarRating(starRating);
-        product.setTechnology(technology);
+        Product product = new Product(productName, productDescription, quantity, capacity, starRating, technology,
+                brand,seller, discount, offer, mrp, filePath, recommendation, deliveryday);
 
         if (product.getQuantity() > 0) {
             product.setStockStatus("true");
         } else {
             product.setStockStatus("false");
         }
-        product.setSeller(seller);
-        product.setDiscount(discount);
-        product.setOffer(offer);
-        product.setMrp(mrp);
-        product.setProductDescription(productDescription);
-        product.setImagePath(filePath);
-        System.out.println(product);
-
         try {
             service.addProducts(product);
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -146,7 +137,8 @@ public class ProductController {
     public List<Product> recommendProducts() {
         List<Product> productList = service.getProducts();
 
-        List<Product> recommendedProducts = productList.stream().filter(prod -> prod.getRecommendation().equals("yes"))
+        List<Product> recommendedProducts = productList.stream()
+                .filter(prod -> prod.getRecommendation().equalsIgnoreCase("yes"))
                 .collect(Collectors.toList());
         System.out.println(recommendedProducts);
 
@@ -154,7 +146,8 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public List<Map<String, Object>> getSearchRecommendations(@RequestParam String val) {
+    public List<Product> getSearchRecommendations(@RequestParam String val) {
+        System.out.println("Value strirng for search: " + val);
         return service.getSearchProducts(val);
     }
 

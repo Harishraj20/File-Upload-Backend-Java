@@ -15,31 +15,31 @@ public class Product {
     private int id;
     private String productName;
     private String productDescription;
-
     private int quantity;
     private String capacity;
-
-    public int getDeliveryday() {
-        return deliveryday;
-    }
-
-    public void setDeliveryday(int deliveryday) {
-        this.deliveryday = deliveryday;
-    }
-
     private int starRating;
     private String technology;
-    private String stockStatus;
+    private String brand;
     private String seller;
     private int discount;
     private String offer;
     private int mrp;
+
+    public String getStockStatus() {
+        return stockStatus;
+    }
+
+    public void setStockStatus(String stockStatus) {
+        this.stockStatus = stockStatus;
+    }
+
     private String imagePath;
     private String recommendation;
     private int deliveryday;
+    private String stockStatus;
 
     public Product(String productName, String productDescription, int quantity, String capacity, int starRating,
-            String technology, String stockStatus, String seller, int discount, String offer, int mrp, String imagePath,
+            String technology, String brand, String seller, int discount, String offer, int mrp, String imagePath,
             String recommendation, int deliveryday) {
         this.productName = productName;
         this.productDescription = productDescription;
@@ -47,7 +47,7 @@ public class Product {
         this.capacity = capacity;
         this.starRating = starRating;
         this.technology = technology;
-        this.stockStatus = stockStatus;
+        this.brand = brand;
         this.seller = seller;
         this.discount = discount;
         this.offer = offer;
@@ -108,6 +108,14 @@ public class Product {
         this.capacity = capacity;
     }
 
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
     public int getStarRating() {
         return starRating;
     }
@@ -122,14 +130,6 @@ public class Product {
 
     public void setTechnology(String technology) {
         this.technology = technology;
-    }
-
-    public String getStockStatus() {
-        return stockStatus;
-    }
-
-    public void setStockStatus(String stockStatus) {
-        this.stockStatus = stockStatus;
     }
 
     public String getSeller() {
@@ -172,6 +172,14 @@ public class Product {
         this.imagePath = imagePath;
     }
 
+    public int getDeliveryday() {
+        return deliveryday;
+    }
+
+    public void setDeliveryday(int deliveryday) {
+        this.deliveryday = deliveryday;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -183,7 +191,7 @@ public class Product {
         sb.append(", capacity=").append(capacity);
         sb.append(", starRating=").append(starRating);
         sb.append(", technology=").append(technology);
-        sb.append(", stockStatus=").append(stockStatus);
+        sb.append(", brand=").append(brand);
         sb.append(", seller=").append(seller);
         sb.append(", discount=").append(discount);
         sb.append(", offer=").append(offer);

@@ -1,7 +1,5 @@
 package com.upload.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +10,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,9 +100,6 @@ public class ProductRepository {
             Session session = sessionFactory.getCurrentSession();
             Product product = session.get(Product.class, productId);
             System.out.println(product);
-            // if (product.getQuantity() == 0) {
-            // return;
-            // }
             product.setQuantity(product.getQuantity() + 1);
             System.out.println(product);
 
@@ -118,7 +112,8 @@ public class ProductRepository {
         }
     }
 
-    public List<Map<String, Object>> listSearchResults(String val) {
+    @SuppressWarnings("unchecked")
+    public List<Product> listSearchResults(String val) {
         try {
             Session session = sessionFactory.getCurrentSession();
 
@@ -127,34 +122,8 @@ public class ProductRepository {
             criteria.add(Restrictions.or(
                     Restrictions.ilike("productName", val, MatchMode.ANYWHERE),
                     Restrictions.ilike("productDescription", val, MatchMode.ANYWHERE)));
-
-            // criteria.add(Restrictions.or(
-            // Restrictions.ilike("productName", "%" + val + "%"),
-            // Restrictions.ilike("productDescription", "%" + val + "%")
-            // ));
             criteria.setMaxResults(10);
-
-            criteria.setProjection(Projections.projectionList()
-                    .add(Projections.property("id"), "id")
-                    .add(Projections.property("productName"), "productName")
-                    .add(Projections.property("productDescription"), "productDescription"));
-            System.out.println("The list is: " + criteria.list());
-
-            @SuppressWarnings("unchecked")
-            List<Object[]> resultList = criteria.list();
-
-            List<Map<String, Object>> productList = new ArrayList<>();
-
-            for (Object[] row : resultList) {
-                Map<String, Object> productMap = new HashMap<>();
-                productMap.put("id", row[0]);
-                productMap.put("productName", row[1]);
-                productMap.put("productDescription", row[2]);
-
-                productList.add(productMap);
-            }
-
-            return productList;
+            return criteria.list();
 
         } catch (HibernateException e) {
             System.out.println("Hibernate Exception is: " + e);
