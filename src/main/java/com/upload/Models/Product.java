@@ -184,7 +184,6 @@ public class Product {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Product{");
-        sb.append("id=").append(id);
         sb.append(", productName=").append(productName);
         sb.append(", productDescription=").append(productDescription);
         sb.append(", quantity=").append(quantity);
@@ -199,6 +198,7 @@ public class Product {
         sb.append(", imagePath=").append(imagePath);
         sb.append(", recommendation=").append(recommendation);
         sb.append(", deliveryday=").append(deliveryday);
+        sb.append(", stock status=").append(stockStatus);
         sb.append('}');
         return sb.toString();
     }

@@ -2,8 +2,6 @@ package com.upload.Controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,8 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.upload.Models.Product;
 import com.upload.Service.ProductService;
 
@@ -45,24 +41,12 @@ public class ProductController {
     @PostMapping("/upload")
     @ResponseBody
     public ResponseEntity<?> handleFileUpload(
-            @RequestParam("productName") String productName,
-            @RequestParam("quantity") int quantity,
-            @RequestParam("capacity") String capacity,
-            @RequestParam("starRating") int starRating,
-            @RequestParam("technology") String technology,
-            @RequestParam("seller") String seller,
-            @RequestParam("discount") int discount,
-            @RequestParam("offer") String offer,
-            @RequestParam("mrp") int mrp,
-            @RequestParam("productDescription") String productDescription,
-            @RequestParam("recommendation") String recommendation,
-            @RequestParam("deliveryday") int deliveryday,
+            Product product,
             @RequestParam("image") MultipartFile file,
-            @RequestParam("brand") String brand,
             HttpServletRequest request) throws IllegalStateException, IOException {
 
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "File is empty"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "File is empty"));
         }
 
         String uploadDir = "C:/uploads/";
@@ -76,8 +60,9 @@ public class ProductController {
         File serverFile = new File(filePath);
         file.transferTo(serverFile);
 
-        Product product = new Product(productName, productDescription, quantity, capacity, starRating, technology,
-                brand,seller, discount, offer, mrp, filePath, recommendation, deliveryday);
+        product.setImagePath(filePath);
+
+        System.out.println("Received Model Attribute: " + product);
 
         if (product.getQuantity() > 0) {
             product.setStockStatus("true");
@@ -108,16 +93,8 @@ public class ProductController {
     @SuppressWarnings("UseSpecificCatch")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
-            Path imagePath = Paths.get("C:/uploads/" + filename);
-            Resource resource = new UrlResource(imagePath.toUri());
+            return service.getImage(filename);
 
-            if (resource.exists() || resource.isReadable()) {
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-                        .body(resource);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
